@@ -1,0 +1,23 @@
+# Local development values for `wrangler dev`. Never commit real secrets.
+#
+# Only three are required. Everything else is configured in /admin/settings
+# after you sign in.
+
+DOMAIN=["example.com"]
+ADMIN=root@example.com
+jwt_secret=anyRandomLettersAndDigits
+
+# --- Not needed -------------------------------------------------------------
+# HENNA_CREDENTIAL_KEY  derived from jwt_secret by HKDF when absent
+# GITHUB_CLIENT_ID      /admin/settings
+# GITHUB_CLIENT_SECRET  /admin/settings
+# RESEND_API_KEY        /admin/settings
+# HENNA_EMAIL_FROM      /admin/settings
+#
+# --- One build-time caveat ---------------------------------------------------
+# The Content-Security-Policy is emitted statically, so if you configure object
+# storage ONLY in /admin/settings, the bucket origin must also be known at
+# build time or the browser will be blocked from reaching it:
+#
+# HENNA_R2_ACCOUNT_ID=0123456789abcdef0123456789abcdef
+# HENNA_STORAGE_ORIGINS=https://<account>.r2.cloudflarestorage.com

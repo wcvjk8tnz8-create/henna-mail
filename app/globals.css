@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-henna-50: #fdf6f3;
+  --color-henna-100: #fae8e0;
+  --color-henna-200: #f3cdbd;
+  --color-henna-400: #d98d63;
+  --color-henna-600: #b4553a;
+  --color-henna-700: #8f3f2a;
+  --color-henna-900: #4a1f14;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-neutral-50 text-neutral-900 antialiased;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-neutral-950 text-neutral-100;
+  }
+}
+
+/* Focus rings are never removed: keyboard users must always see where they are. */
+:focus-visible {
+  outline: 2px solid var(--color-henna-600);
+  outline-offset: 2px;
+}
+
+/*
+ * Page transitions.
+ *
+ * The durations sit in the 150–300ms band and the whole block is disabled when
+ * the user asks for reduced motion, so nobody has to wait on an animation to
+ * use the product.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes henna-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.henna-enter {
+  animation: henna-fade-in 200ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}

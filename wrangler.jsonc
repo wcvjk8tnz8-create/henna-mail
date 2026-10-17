@@ -1,0 +1,65 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "henna-mail",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+
+  // Henna must never cache authenticated responses or mail-related assets.
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+
+  // THREE variables. That is the entire deployment configuration.
+  //
+  // Fill them in the Cloudflare dashboard after the first deploy
+  // (Settings → Variables and Secrets → Add), or override them here. Everything
+  // else — GitHub OAuth, Resend, object storage, TOTP policy, registration
+  // mode — is configured in /admin/settings once you are signed in.
+  //
+  // jwt_secret is listed as an empty placeholder on purpose: put the real value
+  // in the dashboard, not in this file, so it never reaches the repository.
+  "vars": {
+    // Mail domains this instance serves, as a JSON array.
+    "DOMAIN": "[\"r0.us.ci\"]",
+    // This address bootstraps the first administrator.
+    "ADMIN": "admin@r0.us.ci",
+    // Session signing secret: letters and digits only, no punctuation.
+    // Any length works; `openssl rand -hex 24` is recommended because this
+    // value also seeds the credential key when HENNA_CREDENTIAL_KEY is unset.
+    // openssl rand -hex 24
+    "jwt_secret": "web3henna"
+  },
+
+  // Nothing else is needed. Specifically NOT needed:
+  //   HENNA_CREDENTIAL_KEY — derived from jwt_secret by HKDF when absent.
+  //   GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET — /admin/settings.
+  //   RESEND_API_KEY / HENNA_EMAIL_FROM — /admin/settings.
+  //   HENNA_REGISTRATION_MODE / HENNA_TOTP_POLICY — /admin/settings, and both
+  //     have safe defaults (closed, admin-only).
+
+  // Database. Declared by NAME, not by id: Cloudflare creates the D1 database on
+  // first deploy, so there is no id to copy and nothing to paste here.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "henna-db",
+      "migrations_dir": "db/migrations/d1","database_id": "972c662b-4723-4792-95de-3da411d48b3d"
+    }
+  ],
+
+  // Attachments. Also declared by name; the bucket is created on first deploy.
+  // The browser reads and writes it through presigned URLs, so Henna never
+  // proxies attachment bytes.
+  "r2_buckets": [
+    {
+      "binding": "ATTACHMENTS",
+      "bucket_name": "henna-attachments","preview_bucket_name": "henna-attachments"
+    }
+  ]
+
+  // Bringing your own PostgreSQL instead of D1? Replace d1_databases above with:
+  // "hyperdrive": [
+  //   { "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_CONFIG_ID>" }
+  // ]
+  // and set HENNA_DB_KIND=postgres. See docs/cloudflare-deployment.md.
+}

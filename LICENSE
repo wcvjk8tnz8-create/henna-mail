@@ -1,0 +1,50 @@
+Henna — a security-first, self-hostable webmail frontend.
+
+Copyright (C) 2026 The Henna contributors
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+The complete, authoritative text of the GNU Affero General Public License,
+version 3, is published by the Free Software Foundation at:
+
+    https://www.gnu.org/licenses/agpl-3.0.txt
+
+That text is incorporated here by reference and governs your use of this
+program. The notice above is a summary only; where the two differ, the full
+license text prevails.
+
+---
+
+## Third-party dependency licences
+
+Henna's runtime dependencies are listed in `package.json`. Every one of them is
+distributed under a licence that permits redistribution alongside AGPL-3.0
+software — primarily MIT, Apache-2.0, ISC and BSD variants.
+
+Before each release, regenerate and review the dependency licence report:
+
+    npx license-checker --production --summary
+
+Two rules for adding a dependency:
+
+1. **No copyleft-incompatible licence.** AGPL-3.0 is strong copyleft; a
+   dependency whose terms conflict with it cannot be added.
+2. **No native addon in the Workers bundle.** Cloudflare Workers runs with
+   `nodejs_compat` and cannot load native modules. This is why Henna uses
+   `node:crypto`'s scrypt rather than Argon2id, and why `otpauth` (pure
+   TypeScript) provides TOTP.
+
+If you believe a dependency creates a licence incompatibility, please open an
+issue rather than assuming it has already been considered.
